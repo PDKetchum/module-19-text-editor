@@ -24,18 +24,16 @@ warmStrategyCache({
   strategy: pageCache,
 });
 
-registerRoute(
-  ({ request }) => request.mode === "navigate",
-  pageCache,
-  new CacheFirst({
-    cacheName: "asset-cache",
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-    ],
-  })
-);
+registerRoute(({ request }) => request.mode === "navigate", pageCache);
+
+const assetCache = new CacheFirst({
+  cacheName: "asset-cache",
+  plugins: [
+    new CacheableResponsePlugin({
+      statuses: [0, 200],
+    }),
+  ],
+});
 
 // TODO: Implement asset caching
-registerRoute();
+registerRoute(({ request }) => request.mode === "navigate", assetCache);
